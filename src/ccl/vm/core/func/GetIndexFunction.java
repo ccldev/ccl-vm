@@ -9,7 +9,7 @@ import ccl.vm.core.Index;
 import ccl.vm.core.expr.ArrayExpression;
 import ccl.vm.core.expr.IndexExpression;
 
-public class GetIndexFunction extends Expression<FunctionMarker<?,?>> implements IFunction<Number, Index> {
+public class GetIndexFunction extends Expression<FunctionMarker<?,?>> {
 
 	private ArrayExpression arrayExpr;
 
@@ -20,9 +20,9 @@ public class GetIndexFunction extends Expression<FunctionMarker<?,?>> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public IExpression<Index> invoke(IExpression<Number>... parameters)
+	public IExpression<? extends Object> invoke(IExpression<Object>... parameters)
 			throws CclException {
-		return new IndexExpression(new Index(arrayExpr, parameters[0].getValue()));
+		return new IndexExpression(new Index(arrayExpr, (Number) parameters[0].getValue()));
 	}
 
 }

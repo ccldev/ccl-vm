@@ -9,20 +9,20 @@ public class NumberExpression<T> extends Expression<T> {
 	
 	protected NumberExpression(T t){
 		super(t);
-		setProperty("sqrt", new FunctionExpression<Object, Double>(new IFunction<Object, Double>(){
+		setProperty("sqrt", new FunctionExpression(new IFunction<Object, Object>(){
 
 			@Override
-			public IExpression<Double> invoke(IExpression<Object>... parameters)
+			public IExpression<? extends Object> invoke(IExpression<Object>... parameters)
 					throws CclException {
 				return new FloatExpression(
 						Math.sqrt((Double) (NumberExpression.this.getValue())));
 			}
 			
 		}));
-		setProperty("pow", new FunctionExpression<Object, Double>(new IFunction<Object, Double>(){
+		setProperty("pow", new FunctionExpression(new IFunction<Object, Object>(){
 
 			@Override
-			public IExpression<Double> invoke(IExpression<Object>... parameters)
+			public IExpression<? extends Object> invoke(IExpression<Object>... parameters)
 					throws CclException {
 					return new FloatExpression(
 						Math.pow((Double) (NumberExpression.this.getValue()), (double) parameters[0].getValue())

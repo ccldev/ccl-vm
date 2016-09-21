@@ -4,13 +4,15 @@ import java.util.HashMap;
 
 import ccl.iface.CclException;
 import ccl.iface.IExpression;
+import ccl.iface.IFunction;
 import ccl.iface.IType;
 import ccl.vm.core.bridge.Property;
+import ccl.vm.core.expr.ArrayExpression;
 import ccl.vm.core.expr.FunctionExpression;
 import ccl.vm.core.storage.StringConstantPool;
 import ccl.vm.core.storage.VariableInfo;
 
-public class Expression<T> implements IExpression<T>{
+public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 
 	protected T value;
 	private boolean error;
@@ -60,6 +62,16 @@ public class Expression<T> implements IExpression<T>{
 	@Override
 	public boolean bool() {
 		return (Boolean) value;
+	}
+	@Override
+	public IExpression<? extends Object> invoke(IExpression<Object>... parameters)
+			throws CclException {
+		if(parameters.length == 0) return this;
+		else if(parameters.length == 1){
+			return getProperty(parameters[0].getValue().toString());
+		}else{
+			throw new RuntimeException("Unsupported Parameter count!" + parameters.length);
+		}
 	}
 
 }

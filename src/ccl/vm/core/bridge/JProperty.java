@@ -29,7 +29,7 @@ public class JProperty extends Expression<Object> implements IFunction<Object, O
 	}
 	
 	private void initAsFunction() {
-		setProperty("bind", new FunctionExpression<>(new BindFunction(this)));
+		setProperty("bind", new FunctionExpression(new BindFunction(this)));
 	}
 
 	public Object getValue(){

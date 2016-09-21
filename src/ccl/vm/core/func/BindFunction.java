@@ -6,7 +6,7 @@ import ccl.iface.IFunction;
 import ccl.vm.Tools;
 import ccl.vm.core.expr.FunctionExpression;
 
-public class BindFunction implements IFunction<Object, IFunction<Object, Object>>{
+public class BindFunction implements IFunction<Object, Object>{
 
 	private IFunction<Object, Object> func;
 
@@ -15,18 +15,18 @@ public class BindFunction implements IFunction<Object, IFunction<Object, Object>
 	}
 
 	@Override
-	public IExpression<IFunction<Object, Object>> invoke(
+	public IExpression<? extends Object> invoke(
 			final IExpression<Object>... pa) throws CclException {
-		return new FunctionExpression<>(new IFunction<Object, Object>() {
+		return new FunctionExpression(new IFunction<Object, Object>() {
 			@Override
-			public IExpression<Object> invoke(IExpression<Object>... pb)
+			public IExpression<? extends Object> invoke(IExpression<Object>... pb)
 					throws CclException {
 				return invokeBound(pa, pb);
 			}
 		});
 	}
 
-	protected IExpression<Object> invokeBound(IExpression<Object>[] pa,
+	protected IExpression<? extends Object> invokeBound(IExpression<Object>[] pa,
 			IExpression<Object>[] pb) throws CclException {
 		return func.invoke(Tools.link(pa,pb));
 	}

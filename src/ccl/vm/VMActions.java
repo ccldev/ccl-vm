@@ -114,7 +114,7 @@ public class VMActions implements IVMActions{
 			array[i] = (IExpression<Object>) pop();
 		}
 		storage.openScope();
-		IExpression<Object> ret = func.invoke((IExpression<Object>[]) array);
+		IExpression<? extends Object> ret = func.invoke((IExpression<Object>[]) array);
 		storage.closeScope();
 		storage.push(ret);
 	}
