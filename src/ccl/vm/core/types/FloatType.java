@@ -4,7 +4,7 @@ import ccl.iface.IExpression;
 import ccl.vm.core.Undefined;
 import ccl.vm.core.expr.FloatExpression;
 
-public class FloatType extends ExpressionType<Double>{
+public class FloatType extends NumberType<Double>{
 
 	public static final FloatType INSTANCE = new FloatType();
 

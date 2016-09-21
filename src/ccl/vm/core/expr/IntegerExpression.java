@@ -1,10 +1,9 @@
 package ccl.vm.core.expr;
 
 import ccl.iface.IType;
-import ccl.vm.core.Expression;
 import ccl.vm.core.TypeEnum;
 
-public class IntegerExpression extends Expression<Long> {
+public class IntegerExpression extends NumberExpression<Long> {
 
 	public IntegerExpression(long o) {
 		super(o);

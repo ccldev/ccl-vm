@@ -4,7 +4,7 @@ import ccl.iface.IExpression;
 import ccl.vm.core.Undefined;
 import ccl.vm.core.expr.IntegerExpression;
 
-public class IntegerType extends ExpressionType<Long>{
+public class IntegerType extends NumberType<Long>{
 
 	public static final IntegerType INSTANCE = new IntegerType();
 

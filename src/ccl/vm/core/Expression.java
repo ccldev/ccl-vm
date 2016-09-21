@@ -6,6 +6,7 @@ import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IType;
 import ccl.vm.core.bridge.Property;
+import ccl.vm.core.expr.FunctionExpression;
 import ccl.vm.core.storage.StringConstantPool;
 import ccl.vm.core.storage.VariableInfo;
 
@@ -22,7 +23,6 @@ public class Expression<T> implements IExpression<T>{
 	public Expression(){
 		this.properties = new HashMap<>();
 	}
-	
 	public static Expression<Undefined> empty(){
 		return new Expression<>(new Undefined());
 	}
