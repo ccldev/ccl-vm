@@ -12,6 +12,7 @@ import ccl.vm.core.bridge.Property;
 import ccl.vm.core.expr.ArrayExpression;
 import ccl.vm.core.expr.FunctionExpression;
 import ccl.vm.core.func.AddParamFunction;
+import ccl.vm.core.func.ArrayFunction;
 import ccl.vm.core.func.ForFunction;
 import ccl.vm.core.func.LinkFunction;
 import ccl.vm.core.storage.StringConstantPool;
@@ -67,6 +68,7 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 		case "unbind": return new FunctionExpression(new AddParamFunction(this));
 		case "link": return new FunctionExpression(new LinkFunction(this));
 		case "intern": return new Expression(this);
+		case "array": return new FunctionExpression(new ArrayFunction(this));
 		}
 		if(property != null) return property;
 		else return Property.getNative(name, value);
