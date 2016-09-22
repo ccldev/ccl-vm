@@ -17,6 +17,7 @@ import ccl.vm.core.func.ForFunction;
 import ccl.vm.core.func.LinkFunction;
 import ccl.vm.core.storage.StringConstantPool;
 import ccl.vm.core.storage.VariableInfo;
+import ccl.vm.func.WhileFunction;
 
 public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 
@@ -69,6 +70,7 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 		case "link": return new FunctionExpression(new LinkFunction(this));
 		case "intern": return new Expression(this);
 		case "array": return new FunctionExpression(new ArrayFunction(this));
+		case "while": return new FunctionExpression(new WhileFunction(this));
 		}
 		if(property != null) return property;
 		else return Property.getNative(name, value);
