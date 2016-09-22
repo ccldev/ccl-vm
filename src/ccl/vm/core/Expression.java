@@ -1,11 +1,13 @@
 package ccl.vm.core;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.iface.IType;
+import ccl.vm.core.bridge.JBridgeTool;
 import ccl.vm.core.bridge.Property;
 import ccl.vm.core.expr.ArrayExpression;
 import ccl.vm.core.expr.FunctionExpression;
@@ -64,6 +66,7 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 		case "for": return new FunctionExpression(new ForFunction(this));
 		case "unbind": return new FunctionExpression(new AddParamFunction(this));
 		case "link": return new FunctionExpression(new LinkFunction(this));
+		case "intern": return new Expression(this);
 		}
 		if(property != null) return property;
 		else return Property.getNative(name, value);
