@@ -37,7 +37,7 @@ public class FunctionImpl implements IFunction<Object, Object> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public IExpression<Object> invoke(IExpression<Object>... parameters)
+	public IExpression<Object> invoke(IExpression<? extends Object>... parameters)
 			throws CclException {
 		InputStream s;
 		try {

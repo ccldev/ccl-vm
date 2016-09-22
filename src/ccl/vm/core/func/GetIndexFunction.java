@@ -20,7 +20,7 @@ public class GetIndexFunction extends Expression<FunctionMarker<?,?>> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public IExpression<? extends Object> invoke(IExpression<Object>... parameters)
+	public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 			throws CclException {
 		return new IndexExpression(new Index(arrayExpr, (Number) parameters[0].getValue()));
 	}

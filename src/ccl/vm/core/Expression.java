@@ -9,6 +9,9 @@ import ccl.iface.IType;
 import ccl.vm.core.bridge.Property;
 import ccl.vm.core.expr.ArrayExpression;
 import ccl.vm.core.expr.FunctionExpression;
+import ccl.vm.core.func.AddParamFunction;
+import ccl.vm.core.func.ForFunction;
+import ccl.vm.core.func.LinkFunction;
 import ccl.vm.core.storage.StringConstantPool;
 import ccl.vm.core.storage.VariableInfo;
 
@@ -25,6 +28,7 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 	public Expression(){
 		this.properties = new HashMap<>();
 	}
+	
 	public static Expression<Undefined> empty(){
 		return new Expression<>(new Undefined());
 	}
@@ -56,6 +60,11 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 	@Override
 	public IExpression<?> getProperty(String name) throws CclException {
 		Expression<?> property = properties.get(name);
+		switch(name){
+		case "for": return new FunctionExpression(new ForFunction(this));
+		case "unbind": return new FunctionExpression(new AddParamFunction(this));
+		case "link": return new FunctionExpression(new LinkFunction(this));
+		}
 		if(property != null) return property;
 		else return Property.getNative(name, value);
 	}
@@ -64,7 +73,7 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 		return (Boolean) value;
 	}
 	@Override
-	public IExpression<? extends Object> invoke(IExpression<Object>... parameters)
+	public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 			throws CclException {
 		if(parameters.length == 0) return this;
 		else if(parameters.length == 1){

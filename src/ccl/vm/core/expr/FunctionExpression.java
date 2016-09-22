@@ -17,7 +17,7 @@ public class FunctionExpression extends Expression<IFunction<Object, Object>> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public IExpression<? extends Object> invoke(IExpression<Object>... parameters)
+	public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 			throws CclException {
 		return func.invoke(parameters);
 	}

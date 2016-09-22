@@ -43,7 +43,7 @@ public class JProperty extends Expression<Object> implements IFunction<Object, O
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public IExpression<Object> invoke(IExpression<Object>... parameters) throws InvokeException {
+	public IExpression<Object> invoke(IExpression<? extends Object>... parameters) throws InvokeException {
 		Method[] ok = JBridgeTool.filter(methods, parameters.length);
 		return JBridgeTool.invoke(ok, object, parameters);
 	}

@@ -12,9 +12,9 @@ import ccl.vm.err.InvokeException;
 
 public class JInvocationHandler implements InvocationHandler{
 
-	private IExpression<Object> expression;
+	private IExpression<? extends Object> expression;
 
-	public JInvocationHandler(IExpression<Object> expression) {
+	public JInvocationHandler(IExpression<? extends Object> expression) {
 		this.expression = expression;
 	}
 

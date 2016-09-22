@@ -12,7 +12,7 @@ public class NumberExpression<T> extends Expression<T> {
 		setProperty("sqrt", new FunctionExpression(new IFunction<Object, Object>(){
 
 			@Override
-			public IExpression<? extends Object> invoke(IExpression<Object>... parameters)
+			public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 					throws CclException {
 				return new FloatExpression(
 						Math.sqrt((Double) (NumberExpression.this.getValue())));
@@ -22,10 +22,10 @@ public class NumberExpression<T> extends Expression<T> {
 		setProperty("pow", new FunctionExpression(new IFunction<Object, Object>(){
 
 			@Override
-			public IExpression<? extends Object> invoke(IExpression<Object>... parameters)
+			public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 					throws CclException {
 					return new FloatExpression(
-						Math.pow((Double) (NumberExpression.this.getValue()), (double) parameters[0].getValue())
+						Math.pow((Double) (NumberExpression.this.getValue()), (Double) parameters[0].getValue())
 					);
 			}
 			

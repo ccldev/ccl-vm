@@ -73,7 +73,7 @@ public class JClassExpression extends Expression<JClass> implements IFunction<Ob
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public IExpression<Object> invoke(IExpression<Object>... parameters)
+	public IExpression<Object> invoke(IExpression<? extends Object>... parameters)
 			throws CclException {
 		if(getValue().getNormal().isInterface())
 			try {
@@ -93,7 +93,7 @@ public class JClassExpression extends Expression<JClass> implements IFunction<Ob
 		return JBridgeTool.invoke(JBridgeTool.filter(getValue().getConstructors(), parameters.length), parameters);
 	}
 
-	private IExpression<Object> abstractImpl(IExpression<Object> expr) throws Exception {
+	private IExpression<Object> abstractImpl(IExpression<? extends Object> parameters) throws Exception {
 		if(outputDirectory == null) throw new NullPointerException("output directory is null! set using setOutputDirectory");
 		if(!classList.contains(getValue().getNormal())){
 			buildClass(getValue().getNormal());
@@ -101,7 +101,7 @@ public class JClassExpression extends Expression<JClass> implements IFunction<Ob
 		ClassLoader cl = new URLClassLoader(new URL[]{outputDirectory.toURI().toURL()});
 		Class<?> clazz = cl.loadClass(JCodeFactory.createPackageName(getValue().getNormal()) + "." + JClassFactory.getLastName());
 		Constructor<?> cr = clazz.getConstructor(IExpression.class);
-		Object instance = cr.newInstance(expr);
+		Object instance = cr.newInstance(parameters);
 		return new Expression<Object>(instance);
 	}
 

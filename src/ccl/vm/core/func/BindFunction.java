@@ -16,18 +16,18 @@ public class BindFunction implements IFunction<Object, Object>{
 
 	@Override
 	public IExpression<? extends Object> invoke(
-			final IExpression<Object>... pa) throws CclException {
+			final IExpression<? extends Object>... pa) throws CclException {
 		return new FunctionExpression(new IFunction<Object, Object>() {
 			@Override
-			public IExpression<? extends Object> invoke(IExpression<Object>... pb)
+			public IExpression<? extends Object> invoke(IExpression<? extends Object>... pb)
 					throws CclException {
 				return invokeBound(pa, pb);
 			}
 		});
 	}
 
-	protected IExpression<? extends Object> invokeBound(IExpression<Object>[] pa,
-			IExpression<Object>[] pb) throws CclException {
+	protected IExpression<? extends Object> invokeBound(IExpression<? extends Object>[] pa,
+			IExpression<? extends Object>[] pb) throws CclException {
 		return func.invoke(Tools.link(pa,pb));
 	}
 

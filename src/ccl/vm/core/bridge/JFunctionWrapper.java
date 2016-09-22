@@ -18,7 +18,7 @@ public class JFunctionWrapper implements IFunction<Object, Object> {
 	}
 
 	@Override
-	public IExpression<Object> invoke(IExpression<Object>... params)
+	public IExpression<Object> invoke(IExpression<? extends Object>... params)
 			throws CclException {
 		return JBridgeTool.invoke(JBridgeTool.filter((Method[]) expr.getValue(), params.length), object, params);
 	}

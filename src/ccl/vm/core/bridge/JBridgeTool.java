@@ -16,14 +16,14 @@ public class JBridgeTool {
 	private static final int ERROR = 1;
 	private static final int OK = 0;
 
-	public static IExpression<Object> invoke(Method[] methods, Object o, IExpression<Object>[] parameters) throws InvokeException {
+	public static IExpression<Object> invoke(Method[] methods, Object o, IExpression<? extends Object>[] params) throws InvokeException {
 		mainloop: 
 		for (int i = 0; i < methods.length; i++) {
 			Method m = methods[i];
 			Class<?>[] types = m.getParameterTypes();
-			Object[] array = new Object[parameters.length];
+			Object[] array = new Object[params.length];
 			for (int k = 0; k < array.length; k++) {
-				Object param = parameters[k].getValue();
+				Object param = params[k].getValue();
 				Class<?> type = types[k];
 				if(putToArray(array, k, type, param) == ERROR) continue mainloop;
 			}
@@ -35,9 +35,9 @@ public class JBridgeTool {
 				continue mainloop;
 			}
 		}
-		throw new InvokeException("Unable to invoke one of " + Arrays.toString(methods) + " with arguments " + Arrays.toString(parameters));
+		throw new InvokeException("Unable to invoke one of " + Arrays.toString(methods) + " with arguments " + Arrays.toString(params));
 	}
-	public static IExpression<Object> invoke(Constructor<?>[] methods, IExpression<Object>[] parameters) throws InvokeException {
+	public static IExpression<Object> invoke(Constructor<?>[] methods, IExpression<? extends Object>[] parameters) throws InvokeException {
 		mainloop:
 		for (int i = 0; i < methods.length; i++) {
 			Constructor<?> m = methods[i];
@@ -52,7 +52,6 @@ public class JBridgeTool {
 				return invokeSingle(m, array);
 			} catch (IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException | InstantiationException e) {
-				e.printStackTrace(System.out);
 				continue mainloop;
 			}
 		}
@@ -107,7 +106,7 @@ public class JBridgeTool {
 		return ok.toArray(new Constructor<?>[0]);
 	}
 	public static IExpression<Object> createInterfaceInstance(Class<?> iface,
-			IExpression<Object> expression) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+			IExpression<? extends Object> expression) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Class<?> clss = JInterfaceBuilder.makeNormalClass(iface);
 		Constructor<?> constructor = clss.getConstructor(InvocationHandler.class);
 		return new Expression<Object>(constructor.newInstance(new JInvocationHandler(expression)));
