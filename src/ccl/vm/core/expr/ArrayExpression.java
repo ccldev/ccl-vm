@@ -1,6 +1,7 @@
 package ccl.vm.core.expr;
 
 import ccl.iface.CclException;
+import ccl.iface.IExpression;
 import ccl.iface.IType;
 import ccl.vm.core.Array;
 import ccl.vm.core.Expression;

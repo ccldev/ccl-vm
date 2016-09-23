@@ -102,4 +102,12 @@ public class Array {
 		return a;
 	}
 	
+	public <T> T[] raw(Class<T> clss){
+		T[] arr = (T[]) java.lang.reflect.Array.newInstance(clss, length());
+		for(int i = 0; i < arr.length; i++){
+			arr[i] = (T) get(i);
+		}
+		return arr;
+	}
+	
 }
