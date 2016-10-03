@@ -15,7 +15,7 @@ public class NumberExpression<T> extends Expression<T> {
 			public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 					throws CclException {
 				return new FloatExpression(
-						Math.sqrt((Double) (NumberExpression.this.getValue())));
+						Math.sqrt(raw(NumberExpression.this.getValue())));
 			}
 			
 		}));
@@ -25,7 +25,7 @@ public class NumberExpression<T> extends Expression<T> {
 			public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 					throws CclException {
 					return new FloatExpression(
-						Math.pow((Double) (NumberExpression.this.getValue()), (Double) parameters[0].getValue())
+						Math.pow(raw(NumberExpression.this.getValue()), raw(parameters[0].getValue()))
 					);
 			}
 			
@@ -36,7 +36,7 @@ public class NumberExpression<T> extends Expression<T> {
 			public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 					throws CclException {
 					return new FloatExpression(
-						(Double) NumberExpression.this.getValue() + (Double) parameters[0].getValue());
+						raw(NumberExpression.this.getValue()) + raw(parameters[0].getValue()));
 			}
 			
 		}));
@@ -46,7 +46,7 @@ public class NumberExpression<T> extends Expression<T> {
 			public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 					throws CclException {
 					return new FloatExpression(
-						(Double) NumberExpression.this.getValue() * (Double) parameters[0].getValue());
+						raw(NumberExpression.this.getValue()) * raw(parameters[0].getValue()));
 			}
 			
 		}));
@@ -56,7 +56,7 @@ public class NumberExpression<T> extends Expression<T> {
 			public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 					throws CclException {
 					return new FloatExpression(
-						(Double) NumberExpression.this.getValue() - (Double) parameters[0].getValue());
+						raw(NumberExpression.this.getValue()) - raw(parameters[0].getValue()));
 			}
 			
 		}));
@@ -66,7 +66,7 @@ public class NumberExpression<T> extends Expression<T> {
 			public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 					throws CclException {
 					return new FloatExpression(
-						(Double) NumberExpression.this.getValue() / (Double) parameters[0].getValue());
+						raw(NumberExpression.this.getValue()) / raw(parameters[0].getValue()));
 			}
 			
 		}));
@@ -76,7 +76,7 @@ public class NumberExpression<T> extends Expression<T> {
 			public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 					throws CclException {
 					return new BooleanExpression(
-						(Double) NumberExpression.this.getValue() < (Double) parameters[0].getValue());
+						raw(NumberExpression.this.getValue()) < raw(parameters[0].getValue()));
 			}
 			
 		}));
@@ -86,10 +86,14 @@ public class NumberExpression<T> extends Expression<T> {
 			public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 					throws CclException {
 					return new BooleanExpression(
-						(Double) NumberExpression.this.getValue() > (Double) parameters[0].getValue());
+						raw(NumberExpression.this.getValue()) > raw(parameters[0].getValue()));
 			}
 			
 		}));
+	}
+
+	protected double raw(Object value) {
+		return Double.parseDouble(String.valueOf(value));
 	}
 	
 }

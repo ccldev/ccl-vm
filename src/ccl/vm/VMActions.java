@@ -34,8 +34,14 @@ public class VMActions implements IVMActions{
 	private IExpression<?> value;
 	private IExpression<?> error;
 
-	public VMActions(Storage storage){
+	public VMActions(Storage storage) throws FullVariableStorageException, VariableDuplicationException, VariableInitException, FullTempStorageException, TypeCheckException{
 		this.storage = storage;
+		
+		//init
+		reserve("undefined");
+		load("undefined");
+		storage.push(Expression.empty());
+		store();
 	}
 	
 	public void reserve(String name) throws FullVariableStorageException, VariableDuplicationException, VariableInitException{
