@@ -20,7 +20,7 @@ public class PushFunction extends Expression<FunctionMarker<?,?>> {
 	@Override
 	public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 			throws CclException {
-		expr.getValue().push(parameters[0].getValue());
+		expr.getValue().pushExpression((Expression<?>) parameters[0]);
 		if(parameters.length >= 2){
 			expr.setProperty(parameters[1].getValue().toString(), (Expression<?>) parameters[0]);
 		}

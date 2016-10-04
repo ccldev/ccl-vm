@@ -25,11 +25,11 @@ public class LinkedFunction implements IFunction<Object, Object> {
 			IExpression<? extends Object>... parameters) throws CclException {
 		Array ret = new Array(0);
 		Object first = func.invoke(parameters);
-		ret.push(first instanceof Expression ? (Expression) first : new Expression(first));
+		ret.pushExpression(first instanceof Expression ? (Expression) first : new Expression(first));
 		for(int i = 0; i < params.length; i++){
 			IFunction<Object, Object> f = (IFunction<Object, Object>) params[i];
 			Object val = f.invoke(parameters);
-			ret.push(val instanceof Expression ? (Expression) val : new Expression(val));
+			ret.pushExpression(val instanceof Expression ? (Expression) val : new Expression(val));
 		}
 		return new ArrayExpression(ret);
 	}

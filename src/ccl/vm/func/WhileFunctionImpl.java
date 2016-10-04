@@ -23,7 +23,7 @@ public class WhileFunctionImpl implements IFunction<Object, Object> {
 			IExpression<? extends Object>... parameters) throws CclException {
 		Array a = new Array(0);
 		while(condition.invoke().bool()){
-			a.push(func.invoke(parameters).getValue());
+			a.pushExpression((Expression<?>) func.invoke(parameters));
 		}
 		return new ArrayExpression(a);
 	}

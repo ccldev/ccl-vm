@@ -3,6 +3,8 @@ package ccl.vm.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import ccl.iface.debug.Logger;
+
 public class Array {
 
 	public List<Expression<?>> list;
@@ -27,7 +29,12 @@ public class Array {
 	}
 	
 	public void push(Object o){
+		Logger.err.log(this, "WARNING: push method is deprecated!");
 		list.add(new Expression<>(o));
+	}
+	
+	public void pushExpression(Expression<?> expr){
+		list.add(expr);
 	}
 	
 	public void set(int index, Object value){

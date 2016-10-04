@@ -24,7 +24,7 @@ public class ForFunction implements IFunction<Object, Object> {
 			double start = (Double) parameters[0].getValue();
 			double to = (Double) parameters[1].getValue();
 			for(double i = start; i <= to; i++){
-				a.push(expression.invoke(new FloatExpression(i)));
+				a.pushExpression((Expression<?>) expression.invoke(new FloatExpression(i)));
 			}
 			return new ArrayExpression(a);
 		}
@@ -39,7 +39,7 @@ public class ForFunction implements IFunction<Object, Object> {
 			Array out = new Array(0);
 			for(int i = 0; i < in.length(); i++){
 				Object val = in.get(i);
-				out.push(expression.invoke(val instanceof Expression ? (Expression) val : new Expression(val)));
+				out.pushExpression((Expression<?>) expression.invoke(val instanceof Expression ? (Expression) val : new Expression(val)));
 			}
 			return new ArrayExpression(out);
 		}

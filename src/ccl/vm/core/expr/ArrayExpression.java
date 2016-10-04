@@ -6,6 +6,7 @@ import ccl.iface.IType;
 import ccl.vm.core.Array;
 import ccl.vm.core.Expression;
 import ccl.vm.core.TypeEnum;
+import ccl.vm.core.func.ArrayGetFunction;
 import ccl.vm.core.func.GetIndexFunction;
 import ccl.vm.core.func.PushFunction;
 import ccl.vm.err.NoSuchNativePropertyException;
@@ -24,6 +25,7 @@ public class ArrayExpression extends Expression<Array> {
 	private void initProperties() {
 		setProperty("getIndex", new GetIndexFunction(this));
 		setProperty("push", new PushFunction(this));
+		setProperty("get", new ArrayGetFunction(this));
 	}
 
 	public IType<Array> getType(){
