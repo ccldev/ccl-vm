@@ -81,7 +81,11 @@ public class JBridgeTool {
 	}
 	
 	public static IExpression<Object> invokeSingle(Method m, Object o, Object[] parameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		return new Expression<Object>(m.invoke(o, (Object[]) parameters));
+		Object obj = m.invoke(o, (Object[]) parameters);
+		if(m.getReturnType().isPrimitive()){
+			return (IExpression<Object>) JPrimitiveWrapper.wrap(obj);
+		}
+		return new Expression<Object>(obj);
 	}
 
 	public static Method[] filter(Method[] methods, int paramCount) {
