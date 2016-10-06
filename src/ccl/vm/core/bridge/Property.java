@@ -22,7 +22,7 @@ public class Property {
 		try {
 			f = c.getField(name);
 			Object val = f.get(o);
-			if(f.getType().isPrimitive()){
+			if(f.getType().isPrimitive() || f.getType().isArray()){
 				return JPrimitiveWrapper.wrap(val);
 			}
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {}

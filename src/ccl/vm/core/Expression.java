@@ -8,9 +8,16 @@ import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.iface.IType;
 import ccl.vm.core.bridge.JBridgeTool;
+import ccl.vm.core.bridge.JClassExpression;
+import ccl.vm.core.bridge.JProperty;
 import ccl.vm.core.bridge.Property;
 import ccl.vm.core.expr.ArrayExpression;
+import ccl.vm.core.expr.BooleanExpression;
+import ccl.vm.core.expr.FloatExpression;
 import ccl.vm.core.expr.FunctionExpression;
+import ccl.vm.core.expr.IndexExpression;
+import ccl.vm.core.expr.IntegerExpression;
+import ccl.vm.core.expr.StringExpression;
 import ccl.vm.core.func.AddParamFunction;
 import ccl.vm.core.func.ArrayFunction;
 import ccl.vm.core.func.ForFunction;
@@ -71,10 +78,27 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 		case "intern": return new Expression(this);
 		case "array": return new FunctionExpression(new ArrayFunction(this));
 		case "while": return new FunctionExpression(new WhileFunction(this));
+		case "type": return new Expression<>(computeUseType());
 		}
 		if(property != null) return property;
 		else return Property.getNative(name, value);
 	}
+	
+	public String computeUseType(){
+		Class<?> c = getClass();
+		if(c == Expression.class) return "base";
+		if(c == IntegerExpression.class) return "integer";
+		if(c == FloatExpression.class) return "float";
+		if(c == ArrayExpression.class) return "array";
+		if(c == BooleanExpression.class) return "boolean";
+		if(c == StringExpression.class) return "string";
+		if(c == FunctionExpression.class) return "function";
+		if(c == IndexExpression.class) return "index";
+		if(c == JProperty.class) return "native";
+		if(c == JClassExpression.class) return "native";
+		return "unknown";
+	}
+	
 	@Override
 	public boolean bool() {
 		return (Boolean) value;
