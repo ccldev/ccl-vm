@@ -28,11 +28,6 @@ public class Array {
 		return getExpression(index).getValue();
 	}
 	
-	public void push(Object o){
-		Logger.err.log(this, "WARNING: push method is deprecated!");
-		list.add(new Expression<>(o));
-	}
-	
 	public void pushExpression(Expression<?> expr){
 		list.add(expr);
 	}

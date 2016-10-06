@@ -9,5 +9,9 @@ public class Undefined {
 	public String toString(){
 		return "undefined";
 	}
+	
+	public boolean equals(Object other){
+		return other.getClass() == this.getClass();
+	}
 
 }

@@ -1,7 +1,9 @@
 package ccl.vm.core;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import ccl.iface.CclException;
 import ccl.iface.IExpression;
@@ -13,6 +15,7 @@ import ccl.vm.core.bridge.JProperty;
 import ccl.vm.core.bridge.Property;
 import ccl.vm.core.expr.ArrayExpression;
 import ccl.vm.core.expr.BooleanExpression;
+import ccl.vm.core.expr.ErrorExpression;
 import ccl.vm.core.expr.FloatExpression;
 import ccl.vm.core.expr.FunctionExpression;
 import ccl.vm.core.expr.IndexExpression;
@@ -24,6 +27,7 @@ import ccl.vm.core.func.ForFunction;
 import ccl.vm.core.func.LinkFunction;
 import ccl.vm.core.storage.StringConstantPool;
 import ccl.vm.core.storage.VariableInfo;
+import ccl.vm.err.NoSuchNativePropertyException;
 import ccl.vm.func.WhileFunction;
 
 public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
@@ -31,6 +35,7 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 	protected T value;
 	private boolean error;
 	private HashMap<String, Expression<?>> properties;
+	private List<String> propList = new ArrayList<String>();
 	
 	public Expression(T value) {
 		this.value = value;
@@ -64,12 +69,27 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 	}
 	
 	public void setProperty(String name, Expression<?> property){
+		if(!propList.contains(name)){
+			propList.add(name);
+		}
 		properties.remove(name);
 		properties.put(name, property);
 	}
 	
 	@Override
-	public IExpression<?> getProperty(String name) throws CclException {
+	public IExpression<?> getProperty(String name) {
+		Expression<?> res = null;
+		try {
+			res = getProperty0(name);
+		} catch (NoSuchNativePropertyException e) {}
+		if(res != null){
+			setProperty(name, res);
+			return res;
+		}
+		return new ErrorExpression(new CclException("No such property found!"));
+	}
+	
+	private Expression<?> getProperty0(String name) throws NoSuchNativePropertyException{
 		Expression<?> property = properties.get(name);
 		switch(name){
 		case "for": return new FunctionExpression(new ForFunction(this));
@@ -79,11 +99,15 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 		case "array": return new FunctionExpression(new ArrayFunction(this));
 		case "while": return new FunctionExpression(new WhileFunction(this));
 		case "type": return new Expression<>(computeUseType());
+		case "properties": return new ArrayExpression(Array.clone(propList.toArray(new String[0])));
 		}
 		if(property != null) return property;
 		else return Property.getNative(name, value);
 	}
 	
+	public String[] getPropList() {
+		return propList.toArray(new String[0]);
+	}
 	public String computeUseType(){
 		Class<?> c = getClass();
 		if(c == Expression.class) return "base";
@@ -96,6 +120,7 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 		if(c == IndexExpression.class) return "index";
 		if(c == JProperty.class) return "native";
 		if(c == JClassExpression.class) return "native";
+		if(c == ErrorExpression.class) return "error";
 		return "unknown";
 	}
 	

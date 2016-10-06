@@ -10,13 +10,15 @@ import java.util.Arrays;
 import ccl.iface.IExpression;
 import ccl.vm.core.Expression;
 import ccl.vm.err.InvokeException;
+import ccl.vm.core.ErrorMarker;
+import ccl.vm.core.expr.ErrorExpression;
 
 public class JBridgeTool {
 
 	private static final int ERROR = 1;
 	private static final int OK = 0;
 
-	public static IExpression<Object> invoke(Method[] methods, Object o, IExpression<? extends Object>[] params) throws InvokeException {
+	public static IExpression<? extends Object> invoke(Method[] methods, Object o, IExpression<? extends Object>[] params) throws InvokeException {
 		mainloop: 
 		for (int i = 0; i < methods.length; i++) {
 			Method m = methods[i];
@@ -35,7 +37,9 @@ public class JBridgeTool {
 				continue mainloop;
 			}
 		}
-		throw new InvokeException("Unable to invoke one of " + Arrays.toString(methods) + " with arguments " + Arrays.toString(params));
+		return new ErrorExpression(
+			new InvokeException("Unable to invoke one of " + Arrays.toString(methods) + " with arguments " + Arrays.toString(params))
+		);
 	}
 	public static IExpression<Object> invoke(Constructor<?>[] methods, IExpression<? extends Object>[] parameters) throws InvokeException {
 		mainloop:

@@ -4,7 +4,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import ccl.iface.CclException;
+import ccl.vm.core.ErrorMarker;
 import ccl.vm.core.Expression;
+import ccl.vm.core.Undefined;
+import ccl.vm.core.expr.ErrorExpression;
 import ccl.vm.core.storage.Storage;
 import ccl.vm.err.NoSuchNativePropertyException;
 
@@ -43,13 +46,13 @@ public class JPackageExpression extends Expression<JPackage>{
 		return allKnownPackages.get(pack.getName() + "." + child);
 	}
 	
-	public Expression<?> getProperty(String prop) throws CclException{
+	public Expression<?> getProperty(String prop) {
 		JPackage pack = getPackageChild(prop);
 		if(pack != null) return new JPackageExpression(pack);
 		try {
 			return new JClassExpression(getClassChild(prop));
-		} catch (NoSuchNativePropertyException e) {
-			throw new CclException(e);
+		} catch (CclException e) {
+			return new ErrorExpression(e);
 		}
 	}
 

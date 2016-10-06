@@ -22,7 +22,7 @@ public class FunctionExpression extends Expression<IFunction<Object, Object>> {
 		return func.invoke(parameters);
 	}
 	
-	public IExpression<?> getProperty(String prop) throws CclException{
+	public IExpression<?> getProperty(String prop){
 		if(prop.equals("bind")) return new FunctionExpression(new BindFunction((IFunction<Object, Object>) this));
 		return super.getProperty(prop);
 	}

@@ -35,17 +35,5 @@ public class ArrayExpression extends Expression<Array> {
 	public String toString(){
 		return "A:" + array;
 	}
-	
-	public Expression<?> getProperty(String p) throws CclException{
-		try{
-			return (Expression<?>) super.getProperty(p);
-		}catch(NoSuchNativePropertyException e){
-			try{
-				return array.getExpression(Integer.parseInt(p));
-			}catch(RuntimeException e2){
-				throw new NoSuchPropertyException();
-			}
-		}
-	}
 
 }
