@@ -23,13 +23,6 @@ public class JProperty extends Expression<Object> implements IFunction<Object, O
 		this.methods = array;
 		this.object = o;
 		this.value = getValue();
-		if(array.length != 0){
-			initAsFunction();
-		}
-	}
-	
-	private void initAsFunction() {
-		setProperty("bind", new FunctionExpression(new BindFunction(this)));
 	}
 
 	public Object getValue(){

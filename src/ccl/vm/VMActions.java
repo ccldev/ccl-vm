@@ -32,7 +32,6 @@ public class VMActions implements IVMActions{
 	
 	public Storage storage;
 	private IExpression<?> value;
-	private IExpression<?> error;
 
 	public VMActions(Storage storage) throws FullVariableStorageException, VariableDuplicationException, VariableInitException, FullTempStorageException, TypeCheckException{
 		this.storage = storage;
@@ -124,30 +123,6 @@ public class VMActions implements IVMActions{
 		storage.closeScope();
 		storage.push(ret);
 	}
-	@Override
-	public void lss() {
-		storage.push(Operations.lss(pop(), pop()));
-	}
-	@Override
-	public void equ() {
-		storage.push(Operations.equ(pop(), pop()));
-	}
-	@Override
-	public void gtr() {
-		storage.push(Operations.gtr(pop(), pop()));
-	}
-	@Override
-	public void or() {
-		storage.push(Operations.or(pop(), pop()));
-	}
-	@Override
-	public void and() {
-		storage.push(Operations.and(pop(), pop()));
-	}
-	@Override
-	public void not() {
-		storage.push(Operations.not(pop()));
-	}
 
 	@Override
 	public void setExecuterFactory(IExecuterFactory factory) {
@@ -178,33 +153,8 @@ public class VMActions implements IVMActions{
 		return value;
 	}
 
-	@Override
-	public void thrw() {
-		if(this.error != null) throw new IllegalStateException("MORE THAN ONE ERROR THROW!");
-		this.error = pop();
-	}
-
-	@Override
-	public IExpression<?> error() {
-		IExpression<?> err = error;
-		this.error = null;
-		return err;
-	}
-
 	public void add() throws CclException {
 		storage.push(Operations.add(pop(), pop()));
-	}
-	@Override
-	public void sub() throws CclException {
-		storage.push(Operations.sub(pop(), pop()));
-	}
-	@Override
-	public void mul() throws CclException {
-		storage.push(Operations.mul(pop(), pop()));
-	}
-	@Override
-	public void div() throws CclException {
-		storage.push(Operations.div(pop(), pop()));
 	}
 
 	@Override

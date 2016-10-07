@@ -4,7 +4,6 @@ import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.core.Expression;
-import ccl.vm.core.func.BindFunction;
 
 public class FunctionExpression extends Expression<IFunction<Object, Object>> {
 	
@@ -20,11 +19,6 @@ public class FunctionExpression extends Expression<IFunction<Object, Object>> {
 	public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 			throws CclException {
 		return func.invoke(parameters);
-	}
-	
-	public IExpression<?> getProperty(String prop){
-		if(prop.equals("bind")) return new FunctionExpression(new BindFunction((IFunction<Object, Object>) this));
-		return super.getProperty(prop);
 	}
 	
 }

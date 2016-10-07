@@ -23,6 +23,7 @@ import ccl.vm.core.expr.IntegerExpression;
 import ccl.vm.core.expr.StringExpression;
 import ccl.vm.core.func.AddParamFunction;
 import ccl.vm.core.func.ArrayFunction;
+import ccl.vm.core.func.BindFunction;
 import ccl.vm.core.func.ForFunction;
 import ccl.vm.core.func.LinkFunction;
 import ccl.vm.core.storage.StringConstantPool;
@@ -40,11 +41,21 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 	public Expression(T value) {
 		this.value = value;
 		this.properties = new HashMap<>();
+		init();
 	}
 	public Expression(){
 		this.properties = new HashMap<>();
+		init();
 	}
 	
+	private void init() {
+		propList.add("array");
+		propList.add("while");
+		propList.add("for");
+		propList.add("unbind");
+		propList.add("link");
+		propList.add("bind");
+	}
 	public static Expression<Undefined> empty(){
 		return new Expression<>(new Undefined());
 	}
@@ -68,7 +79,7 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 		return StringConstantPool.make(s);
 	}
 	
-	public void setProperty(String name, Expression<?> property){
+	public final void setProperty(String name, Expression<?> property){
 		if(!propList.contains(name)){
 			propList.add(name);
 		}
@@ -77,8 +88,9 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 	}
 	
 	@Override
-	public IExpression<?> getProperty(String name) {
+	public final IExpression<?> getProperty(String name) {
 		Expression<?> res = null;
+		
 		try {
 			res = getProperty0(name);
 		} catch (NoSuchNativePropertyException e) {}
@@ -92,12 +104,13 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 	private Expression<?> getProperty0(String name) throws NoSuchNativePropertyException{
 		Expression<?> property = properties.get(name);
 		switch(name){
+		case "array": return new FunctionExpression(new ArrayFunction(this));
+		case "while": return new FunctionExpression(new WhileFunction(this));
 		case "for": return new FunctionExpression(new ForFunction(this));
 		case "unbind": return new FunctionExpression(new AddParamFunction(this));
 		case "link": return new FunctionExpression(new LinkFunction(this));
-		case "intern": return new Expression(this);
-		case "array": return new FunctionExpression(new ArrayFunction(this));
-		case "while": return new FunctionExpression(new WhileFunction(this));
+		case "bind": return new FunctionExpression(new BindFunction(this));
+		case "intern": return new Expression<>(this);
 		case "type": return new Expression<>(computeUseType());
 		case "properties": return new ArrayExpression(Array.clone(propList.toArray(new String[0])));
 		}
@@ -110,7 +123,10 @@ public class Expression<T> implements IExpression<T>, IFunction<Object, Object>{
 	}
 	public String computeUseType(){
 		Class<?> c = getClass();
-		if(c == Expression.class) return "base";
+		if(c == Expression.class){
+			if(getValue() instanceof ErrorMarker) return "error";
+			return "base";
+		}
 		if(c == IntegerExpression.class) return "integer";
 		if(c == FloatExpression.class) return "float";
 		if(c == ArrayExpression.class) return "array";

@@ -104,6 +104,7 @@ public class Array {
 		return a;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T> T[] raw(Class<T> clss){
 		T[] arr = (T[]) java.lang.reflect.Array.newInstance(clss, length());
 		for(int i = 0; i < arr.length; i++){
