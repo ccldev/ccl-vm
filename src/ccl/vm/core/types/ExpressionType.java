@@ -4,7 +4,6 @@ import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IType;
 import ccl.vm.core.Expression;
-import ccl.vm.core.bridge.JProperty;
 
 public class ExpressionType<T> implements IType<T>{
 

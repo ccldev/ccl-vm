@@ -14,6 +14,7 @@ public class WhileFunction implements IFunction<Object, Object> {
 		this.expression = expression;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public IExpression<? extends Object> invoke(
 			IExpression<? extends Object>... parameters) throws CclException {

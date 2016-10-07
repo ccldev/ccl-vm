@@ -1,7 +1,5 @@
 package ccl.vm.core.func;
 
-import java.util.Arrays;
-
 import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IFunction;
@@ -16,6 +14,7 @@ public class CuttedFunction implements IFunction<Object, Object> {
 		this.func = expression;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public IExpression<? extends Object> invoke(
 			IExpression<? extends Object>... parameters) throws CclException {

@@ -1,7 +1,5 @@
 package ccl.vm.core.types;
 
-import java.lang.reflect.Method;
-
 import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IFunction;

@@ -14,12 +14,9 @@ import java.util.ArrayList;
 import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IFunction;
-import ccl.iface.IType;
 import ccl.vm.core.Expression;
 import ccl.vm.core.bridge.codefactory.JClassFactory;
 import ccl.vm.core.bridge.codefactory.JCodeFactory;
-import ccl.vm.core.types.NativeType;
-import ccl.vm.err.NoSuchNativePropertyException;
 
 public class JClassExpression extends Expression<JClass> implements IFunction<Object, Object>{
 
@@ -37,14 +34,14 @@ public class JClassExpression extends Expression<JClass> implements IFunction<Ob
 		JClassExpression.outputDirectory = outputDirectory;
 	}
 
-	public JClassExpression(JClass c) throws NoSuchNativePropertyException {
+	public JClassExpression(JClass c) {
 		super(c);
 		nameList = new ArrayList<String>();
 		initMethods(c.getMethods());
 		initFields(c.getFields());
 	}
 
-	private void initMethods(Method[] methods) throws NoSuchNativePropertyException {
+	private void initMethods(Method[] methods){
 		for(int i = 0; i < methods.length; i++){
 			Method m = methods[i];
 			String name = m.getName();
@@ -54,14 +51,16 @@ public class JClassExpression extends Expression<JClass> implements IFunction<Ob
 		}
 	}
 
-	private void register(String name) throws NoSuchNativePropertyException {
+	private void register(String name){
 		Field f = getValue().getField(name);
 		Method[] methods = getValue().getMethods(name);
-		setProperty(name, new JProperty(null, methods, f));
+		try {
+			setProperty(name, new JProperty(null, methods, f));
+		} catch (CclException e) {}
 		nameList.add(name);
 	}
 
-	private void initFields(Field[] fields) throws NoSuchNativePropertyException {
+	private void initFields(Field[] fields) {
 		for(int i = 0; i < fields.length; i++){
 			Field f = fields[i];
 			String name = f.getName();
@@ -73,7 +72,7 @@ public class JClassExpression extends Expression<JClass> implements IFunction<Ob
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public IExpression<Object> invoke(IExpression<? extends Object>... parameters)
+	public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 			throws CclException {
 		if(getValue().getNormal().isInterface())
 			try {
@@ -98,8 +97,9 @@ public class JClassExpression extends Expression<JClass> implements IFunction<Ob
 		if(!classList.contains(getValue().getNormal())){
 			buildClass(getValue().getNormal());
 		}
-		ClassLoader cl = new URLClassLoader(new URL[]{outputDirectory.toURI().toURL()});
+		URLClassLoader cl = new URLClassLoader(new URL[]{outputDirectory.toURI().toURL()});
 		Class<?> clazz = cl.loadClass(JCodeFactory.createPackageName(getValue().getNormal()) + "." + JClassFactory.getLastName());
+		cl.close();
 		Constructor<?> cr = clazz.getConstructor(IExpression.class);
 		Object instance = cr.newInstance(parameters);
 		return new Expression<Object>(instance);

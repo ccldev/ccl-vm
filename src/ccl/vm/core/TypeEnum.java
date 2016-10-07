@@ -7,7 +7,7 @@ import static ccl.vm.core.TypeFactory.*;
 public enum TypeEnum {
 	
 	STRING(s()), INTEGER(i()), FLOAT(f()), 
-	ARRAY(a()), INDEX(d()), EXPRESSION(e()),
+	ARRAY(a()), EXPRESSION(e()),
 	BOOLEAN(b()), NATIVE(n()), METHOD(m());
 	
 	private IType<?> type;

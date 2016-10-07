@@ -4,13 +4,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import ccl.iface.debug.Logger;
+import ccl.iface.CclException;
 import ccl.vm.core.Expression;
-import ccl.vm.err.NoSuchNativePropertyException;
+import ccl.vm.core.expr.ErrorExpression;
 
 public class Property {
 	
-	public static Expression<?> getNative(String name, Object o) throws NoSuchNativePropertyException{
+	public static Expression<?> getNative(String name, Object o){
 		Class<?> c = o.getClass();
 		Method[] methods = c.getMethods();
 		ArrayList<Method> filter = new ArrayList<Method>();
@@ -26,7 +26,11 @@ public class Property {
 				return JPrimitiveWrapper.wrap(val);
 			}
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {}
-		return new JProperty(o, filter.toArray(new Method[0]), f);
+		try {
+			return new JProperty(o, filter.toArray(new Method[0]), f);
+		} catch (CclException e) {
+			return new ErrorExpression(e);
+		}
 	}
 	
 }

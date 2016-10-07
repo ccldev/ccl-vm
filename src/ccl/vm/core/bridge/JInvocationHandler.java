@@ -8,7 +8,6 @@ import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.Tools;
 import ccl.vm.core.Expression;
-import ccl.vm.err.InvokeException;
 
 public class JInvocationHandler implements InvocationHandler{
 
@@ -27,22 +26,8 @@ public class JInvocationHandler implements InvocationHandler{
 		if(e instanceof IFunction){
 			return ((IFunction<Object, Object>) e).invoke(wrapToExpressions(parameters));
 		}else{
-			try{
-				return Tools.asFunction((IExpression<Object>) e, o).invoke(wrapToExpressions(params));
-			}catch(InvokeException ex){
-				if(params.length <= 0) throw ex;
-				return invoke(o, m, removeOne(params));
-			}
+			return Tools.asFunction((IExpression<Object>) e, o).invoke(wrapToExpressions(params));
 		}
-	}
-
-	private Object[] removeOne(Object[] params) {
-		if(params.length == 0) throw new RuntimeException("Array length is 0!");
-		Object[] ret = new Object[params.length - 1];
-		for(int i = 0; i < ret.length; i++){
-			ret[i] = params[i];
-		}
-		return ret;
 	}
 
 	private Object[] createParamArray(Object[] params) {

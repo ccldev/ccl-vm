@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import ccl.iface.IExpression;
 import ccl.iface.IFunction;
-import ccl.vm.core.bridge.JBridgeTool;
 import ccl.vm.core.bridge.JFunctionWrapper;
 
 public class Tools {
@@ -25,6 +24,7 @@ public class Tools {
 		return new JFunctionWrapper(expr, o);
 	}
 
+	@SafeVarargs
 	public static <T> T[] link(T[]... arrays){
 		ArrayList<T> list = new ArrayList<T>();
 		for(int i = 0; i < arrays.length; i++){

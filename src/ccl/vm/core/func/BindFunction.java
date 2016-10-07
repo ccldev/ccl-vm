@@ -14,6 +14,7 @@ public class BindFunction implements IFunction<Object, Object>{
 		this.func = func;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public IExpression<? extends Object> invoke(
 			final IExpression<? extends Object>... pa) throws CclException {

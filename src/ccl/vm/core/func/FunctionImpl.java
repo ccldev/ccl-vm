@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 
 import ccl.iface.CclException;
 import ccl.iface.IExpression;
@@ -15,7 +14,7 @@ import ccl.iface.exec.IExecuter;
 import ccl.iface.exec.IExecuterFactory;
 import ccl.vm.core.Expression;
 import ccl.vm.core.Undefined;
-import ccl.vm.err.InvokeException;
+import ccl.vm.core.expr.ErrorExpression;
 
 public class FunctionImpl implements IFunction<Object, Object> {
 
@@ -37,13 +36,13 @@ public class FunctionImpl implements IFunction<Object, Object> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public IExpression<Object> invoke(IExpression<? extends Object>... parameters)
+	public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 			throws CclException {
 		InputStream s;
 		try {
 			s = url.openStream();
 		} catch (IOException e) {
-			throw new InvokeException(e);
+			return new ErrorExpression(e);
 		}
 		try {
 			IExecuter exec = factory.create();

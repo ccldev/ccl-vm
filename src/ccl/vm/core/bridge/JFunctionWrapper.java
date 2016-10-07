@@ -1,7 +1,6 @@
 package ccl.vm.core.bridge;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 import ccl.iface.CclException;
 import ccl.iface.IExpression;
@@ -17,6 +16,7 @@ public class JFunctionWrapper implements IFunction<Object, Object> {
 		this.object = o;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public IExpression<? extends Object> invoke(IExpression<? extends Object>... params)
 			throws CclException {

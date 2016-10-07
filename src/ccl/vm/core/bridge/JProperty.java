@@ -3,13 +3,10 @@ package ccl.vm.core.bridge;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.core.Expression;
-import ccl.vm.core.expr.FunctionExpression;
-import ccl.vm.core.func.BindFunction;
-import ccl.vm.err.InvokeException;
-import ccl.vm.err.NoSuchNativePropertyException;
 
 public class JProperty extends Expression<Object> implements IFunction<Object, Object>{
 
@@ -17,8 +14,8 @@ public class JProperty extends Expression<Object> implements IFunction<Object, O
 	private Method[] methods;
 	private Object object;
 
-	public JProperty(Object o, Method[] array, Field f) throws NoSuchNativePropertyException {
-		if(array.length == 0 && f == null) throw new NoSuchNativePropertyException();
+	public JProperty(Object o, Method[] array, Field f) throws CclException {
+		if(array.length == 0 && f == null) throw new CclException("No such native property!");
 		this.field = f;
 		this.methods = array;
 		this.object = o;
@@ -36,7 +33,7 @@ public class JProperty extends Expression<Object> implements IFunction<Object, O
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters) throws InvokeException {
+	public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters){
 		Method[] ok = JBridgeTool.filter(methods, parameters.length);
 		return JBridgeTool.invoke(ok, object, parameters);
 	}

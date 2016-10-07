@@ -5,9 +5,7 @@ import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.core.Array;
 import ccl.vm.core.Expression;
-import ccl.vm.core.Index;
 import ccl.vm.core.expr.ArrayExpression;
-import ccl.vm.core.expr.IntegerExpression;
 
 public class ArrayFunction implements IFunction<Object, Object> {
 
@@ -19,7 +17,7 @@ public class ArrayFunction implements IFunction<Object, Object> {
 
 	@Override
 	public IExpression<? extends Object> invoke(
-			IExpression<? extends Object>... parameters) throws CclException {
+			@SuppressWarnings("unchecked") IExpression<? extends Object>... parameters) throws CclException {
 		Array a = new Array(1);
 		a.set(0, expression);
 		ArrayExpression e = new ArrayExpression(a);

@@ -15,7 +15,7 @@ public class LinkFunction implements IFunction<Object, Object>{
 
 	@Override
 	public IExpression<? extends Object> invoke(
-			IExpression<? extends Object>... parameters) throws CclException {
+			@SuppressWarnings("unchecked") IExpression<? extends Object>... parameters) throws CclException {
 		return new FunctionExpression(new LinkedFunction(expression, parameters));
 	}
 

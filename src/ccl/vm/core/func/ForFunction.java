@@ -11,11 +11,12 @@ import ccl.vm.core.expr.FloatExpression;
 public class ForFunction implements IFunction<Object, Object> {
 
 	private IFunction<Object, Object> expression;
-
+	
 	public ForFunction(IFunction<Object, Object> expression) {
 		this.expression = expression;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public IExpression<? extends Object> invoke(
 			IExpression<? extends Object>... parameters) throws CclException {
@@ -39,7 +40,7 @@ public class ForFunction implements IFunction<Object, Object> {
 			Array out = new Array(0);
 			for(int i = 0; i < in.length(); i++){
 				Object val = in.get(i);
-				out.pushExpression((Expression<?>) expression.invoke(val instanceof Expression ? (Expression) val : new Expression(val)));
+				out.pushExpression((Expression<?>) expression.invoke(val instanceof Expression ? (Expression<?>) val : new Expression<>(val)));
 			}
 			return new ArrayExpression(out);
 		}

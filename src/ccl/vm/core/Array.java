@@ -3,8 +3,6 @@ package ccl.vm.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import ccl.iface.debug.Logger;
-
 public class Array {
 
 	public List<Expression<?>> list;

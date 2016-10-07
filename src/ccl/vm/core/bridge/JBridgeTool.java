@@ -5,12 +5,10 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import ccl.iface.IExpression;
 import ccl.vm.core.Expression;
-import ccl.vm.err.InvokeException;
-import ccl.vm.core.ErrorMarker;
 import ccl.vm.core.expr.ErrorExpression;
 
 public class JBridgeTool {
@@ -18,7 +16,9 @@ public class JBridgeTool {
 	private static final int ERROR = 1;
 	private static final int OK = 0;
 
-	public static IExpression<? extends Object> invoke(Method[] methods, Object o, IExpression<? extends Object>[] params) throws InvokeException {
+	public static IExpression<? extends Object> invoke(Method[] methods, Object o, IExpression<? extends Object>[] params) {
+		List<Throwable> errors = new ArrayList<Throwable>();
+		
 		mainloop: 
 		for (int i = 0; i < methods.length; i++) {
 			Method m = methods[i];
@@ -33,15 +33,17 @@ public class JBridgeTool {
 				return invokeSingle(m, o, array);
 			} catch (IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
-				e.printStackTrace(System.out);
+				if(e instanceof InvocationTargetException){
+					errors.add(e);
+				}
 				continue mainloop;
 			}
 		}
-		return new ErrorExpression(
-			new InvokeException("Unable to invoke one of " + Arrays.toString(methods) + " with arguments " + Arrays.toString(params))
-		);
+		return new ErrorExpression(errors);
 	}
-	public static IExpression<Object> invoke(Constructor<?>[] methods, IExpression<? extends Object>[] parameters) throws InvokeException {
+	public static IExpression<? extends Object> invoke(Constructor<?>[] methods, IExpression<? extends Object>[] parameters) {
+		List<Throwable> errors = new ArrayList<Throwable>();
+		
 		mainloop:
 		for (int i = 0; i < methods.length; i++) {
 			Constructor<?> m = methods[i];
@@ -56,10 +58,13 @@ public class JBridgeTool {
 				return invokeSingle(m, array);
 			} catch (IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException | InstantiationException e) {
+				if(e instanceof InvocationTargetException){
+					errors.add(e.getCause());
+				}
 				continue mainloop;
 			}
 		}
-		throw new InvokeException("Unable to invoke one of " + Arrays.toString(methods) + " with arguments " + Arrays.toString(parameters));
+		return new ErrorExpression(errors);
 	}
 	
 	private static IExpression<Object> invokeSingle(Constructor<?> m, Object[] parameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -84,6 +89,7 @@ public class JBridgeTool {
 		return OK;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static IExpression<Object> invokeSingle(Method m, Object o, Object[] parameters) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		Object obj = m.invoke(o, (Object[]) parameters);
 		if(m.getReturnType().isPrimitive() || m.getReturnType().isArray()){

@@ -4,10 +4,8 @@ import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.vm.core.Expression;
 import ccl.vm.core.FunctionMarker;
-import ccl.vm.core.Index;
 import ccl.vm.core.Undefined;
 import ccl.vm.core.expr.ArrayExpression;
-import ccl.vm.core.expr.IndexExpression;
 
 public class PushFunction extends Expression<FunctionMarker<?,?>> {
 	
@@ -17,6 +15,7 @@ public class PushFunction extends Expression<FunctionMarker<?,?>> {
 		this.expr = expr;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public IExpression<? extends Object> invoke(IExpression<? extends Object>... parameters)
 			throws CclException {
