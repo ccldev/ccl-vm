@@ -1,8 +1,6 @@
 package ccl.vm.storage;
 
 import ccl.iface.IExpression;
-import ccl.iface.IType;
-import ccl.vm.core.Expression;
 
 public class Scope {
 	
@@ -10,33 +8,23 @@ public class Scope {
 	IExpression[] variables;
 	String[] names;
 	boolean[] used;
-	IType[] type;
-	private int tempSize;
-	private int varSize;
 	
-	public int getTempSize() {
-		return temp.length;
-	}
-
-	public int getVarSize() {
-		return variables.length;
+	int getSize(){
+		return names.length;
 	}
 
 	private Scope child;
 	Scope parent;
 	
-	public Scope(int varSize, int tempSize){
-		temp = new Expression[tempSize];
-		variables = new Expression[varSize];
-		names = new String[varSize];
-		used = new boolean[varSize];
-		type = new IType[varSize];
-		this.tempSize = tempSize;
-		this.varSize = varSize;
+	public Scope(int size){
+		temp = new IExpression[size];
+		variables = new IExpression[size];
+		names = new String[size];
+		used = new boolean[size];
 	}
 
 	public Scope chain() {
-		this.child = new Scope(varSize, tempSize);
+		this.child = new Scope(temp.length);
 		this.child.setParent(this);
 		return this.child;
 	}
@@ -56,9 +44,6 @@ public class Scope {
 		variables = null;
 		names = null;
 		used = null;
-		type = null;
-		tempSize = 0;
-		varSize = 0;
 		
 		this.child = null;
 	}

@@ -5,9 +5,7 @@ import java.lang.reflect.Method;
 
 import ccl.iface.CclException;
 import ccl.iface.IExpression;
-import ccl.iface.IFunction;
 import ccl.vm.core.Expression;
-import ccl.vm.core.Undefined;
 
 public class JProperty extends Expression {
 
@@ -20,24 +18,7 @@ public class JProperty extends Expression {
 		this.field = f;
 		this.methods = array;
 		this.object = o;
-		this.value = getValue();
-		
-		setProperty("_set_", new Expression(new IFunction(){
-
-			@Override
-			public IExpression invoke(
-					IExpression... parameters)
-					throws CclException {
-				try {
-					field.set(object, parameters[0].getValue());
-					return new Expression(new Undefined());
-				} catch (Exception e) {
-					throw new CclException(e);
-				}
-			}
-			
-		}));
-		
+		this.value = getValue();		
 	}
 
 	public Object getValue(){
@@ -53,6 +34,10 @@ public class JProperty extends Expression {
 	public IExpression invoke(IExpression... parameters){
 		Method[] ok = JBridgeTool.filter(methods, parameters.length);
 		return JBridgeTool.invoke(ok, object, parameters);
+	}
+	
+	public void set(Expression newVal) throws IllegalArgumentException, IllegalAccessException {
+		field.set(object, newVal.getValue());
 	}
 
 }

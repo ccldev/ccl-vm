@@ -17,6 +17,7 @@ import ccl.vm.func.ForFunction;
 import ccl.vm.func.FunctionImpl;
 import ccl.vm.func.LinkFunction;
 import ccl.vm.func.PropertyFunction;
+import ccl.vm.func.SetFunction;
 import ccl.vm.func.WhileFunction;
 import ccl.vm.storage.VariableInfo;
 
@@ -118,6 +119,8 @@ public class Expression implements IExpression {
 			return new Expression(new BindFunction(this));
 		case "property":
 			return new Expression(new PropertyFunction(this));
+		case "_set_":
+			return new Expression(new SetFunction(this));
 		}
 		res = getProperty0(name);
 		if (res != null) {
@@ -184,6 +187,13 @@ public class Expression implements IExpression {
 			throw new RuntimeException("Unsupported Parameter count!"
 					+ parameters.length);
 		}
+	}
+
+	public void set(Expression newVal) throws Exception{
+		value = newVal.value;
+		propList = newVal.propList;
+		properties = newVal.properties;
+		error = newVal.error;
 	}
 
 }

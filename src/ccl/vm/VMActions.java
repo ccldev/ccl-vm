@@ -53,9 +53,6 @@ public class VMActions implements IVMActions{
 		storage.push(e);
 		storage.push(e);
 	}
-	public void settype(IType t) throws TypeCheckException{
-		storage.setType(storage.pop().asVariable().getIndex(), t);
-	}
 	public void put(String val){
 		storage.push(new Expression(val));
 	}

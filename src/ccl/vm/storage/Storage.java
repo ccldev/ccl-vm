@@ -1,13 +1,10 @@
 package ccl.vm.storage;
 
 import ccl.iface.IExpression;
-import ccl.iface.IType;
 import ccl.vm.core.Expression;
-import ccl.vm.core.TypeEnum;
 import ccl.vm.core.Undefined;
 import ccl.vm.err.FullTempStorageException;
 import ccl.vm.err.FullVariableStorageException;
-import ccl.vm.err.TypeCheckException;
 import ccl.vm.err.VariableDuplicationException;
 import ccl.vm.err.VariableInitException;
 
@@ -17,8 +14,8 @@ public class Storage {
 	
 	Scope scope;
 	
-	public Storage(int tempSize, int varSize){
-		scope = new Scope(varSize, tempSize);
+	public Storage(int size){
+		scope = new Scope(size);
 	}
 	
 	public VariableInfo reserve(String name) throws FullVariableStorageException, VariableDuplicationException, VariableInitException{
@@ -34,7 +31,7 @@ public class Storage {
 	}
 	
 	private void put(Expression e) throws FullTempStorageException {
-		for(int i = 0; i < scope.getTempSize(); i++){
+		for(int i = 0; i < scope.getSize(); i++){
 			if(scope.temp[i] != null) continue;
 			scope.temp[i] = e;
 			return;
@@ -58,14 +55,12 @@ public class Storage {
 		scope.variables[index] = new Expression(new Undefined());
 		scope.names[index] = PLACEHOLDER;
 		scope.used[index] = true;
-		scope.type[index] = TypeEnum.EXPRESSION.get();
 	}
 
 	private void checkEmpty(int index) throws VariableInitException {
 		if(scope.used[index]) initError();
 		if(scope.names[index] != null) initError();
 		if(scope.variables[index] != null) initError();
-		if(scope.type[index] != null) initError();
 	}
 
 	private void initError() throws VariableInitException{
@@ -73,7 +68,7 @@ public class Storage {
 	}
 
 	public static int findIndex(Scope scope, String name) {
-		for(int i = 0; i < scope.getVarSize(); i++){
+		for(int i = 0; i < scope.getSize(); i++){
 			if(!scope.used[i]) continue;
 			if(scope.names[i].equals(name)) return i;
 		}
@@ -81,7 +76,7 @@ public class Storage {
 	}
 
 	private int detectFreeVar() throws FullVariableStorageException {
-		for(int i = 0; i < scope.getVarSize(); i++){
+		for(int i = 0; i < scope.getSize(); i++){
 			if(!scope.used[i]) return i;
 		}
 		throw new FullVariableStorageException();
@@ -96,7 +91,7 @@ public class Storage {
 				+ (scope.names != null ? arrayToString(scope.names, scope.names.length) : null)
 				+ ", used="
 				+ (scope.used != null ? arrayToString(scope.used, scope.used.length) : null)
-				+ ", tempSize=" + scope.getTempSize() + ", varSize=" + scope.getVarSize() + "]";
+				+ ", tempSize=" + scope.getSize() + ", varSize=" + scope.getSize() + "]";
 	}
 
 	private String arrayToString(Object array, int len) {
@@ -118,7 +113,7 @@ public class Storage {
 		if(scope.temp[0] == null) return "()";
 		StringBuilder b = new StringBuilder("(");
 		b.append(scope.temp[0]);
-		for(int i = 1; i < scope.getTempSize(); i++){
+		for(int i = 1; i < scope.getSize(); i++){
 			if(scope.temp[i] == null) break;
 			b.append(", ");
 			b.append(scope.temp[i]);
@@ -128,10 +123,10 @@ public class Storage {
 	}
 	
 	private int getLastFullTempIndex(){
-		for(int i = 0; i < scope.getTempSize(); i++){
+		for(int i = 0; i < scope.getSize(); i++){
 			if(scope.temp[i] == null) return i - 1;
 		}
-		return scope.getTempSize() - 1;
+		return scope.getSize() - 1;
 	}
 	
 	public IExpression pop(){
@@ -147,10 +142,6 @@ public class Storage {
 	
 	public void push(IExpression e){
 		scope.temp[getLastFullTempIndex() + 1] = e;
-	}
-	
-	public void setType(int index, IType t) throws TypeCheckException{
-		scope.type[index] = t;
 	}
 
 	public void delete(String name) throws VariableInitException {
