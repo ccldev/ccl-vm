@@ -7,14 +7,34 @@ import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.Tools;
+import ccl.vm.core.Array;
 import ccl.vm.core.Expression;
+import ccl.vm.core.expr.ArrayExpression;
+import ccl.vm.core.expr.StringExpression;
 
 public class JInvocationHandler implements InvocationHandler{
 
 	private IExpression<? extends Object> expression;
 
-	public JInvocationHandler(IExpression<? extends Object> expression) {
+	public JInvocationHandler(Class<?> iface, IExpression<? extends Object> expression) {
 		this.expression = expression;
+		try {
+			Object type = expression.getProperty("type").getValue();
+			if(type.equals("function")){
+				Method[] ms = iface.getMethods();
+				if(ms.length == 1){
+					this.expression = wrapToArray(ms[0].getName(), expression);
+				}
+			}
+		} catch (CclException e) {}
+	}
+
+	@SuppressWarnings("unchecked")
+	private IExpression<? extends Object> wrapToArray(String name,
+			IExpression<? extends Object> func) throws CclException {
+		ArrayExpression expr = new ArrayExpression(new Array(0));
+		expr.getProperty("push").invoke(func, new StringExpression(name));
+		return expr;
 	}
 
 	@SuppressWarnings("unchecked")

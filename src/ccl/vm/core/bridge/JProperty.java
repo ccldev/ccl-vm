@@ -7,6 +7,8 @@ import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.core.Expression;
+import ccl.vm.core.Undefined;
+import ccl.vm.core.expr.FunctionExpression;
 
 public class JProperty extends Expression<Object> implements IFunction<Object, Object>{
 
@@ -20,6 +22,23 @@ public class JProperty extends Expression<Object> implements IFunction<Object, O
 		this.methods = array;
 		this.object = o;
 		this.value = getValue();
+		
+		setProperty("_set_", new FunctionExpression(new IFunction<Object, Object>(){
+
+			@Override
+			public IExpression<? extends Object> invoke(
+					IExpression<? extends Object>... parameters)
+					throws CclException {
+				try {
+					field.set(object, parameters[0].getValue());
+					return new Expression<>(new Undefined());
+				} catch (Exception e) {
+					throw new CclException(e);
+				}
+			}
+			
+		}));
+		
 	}
 
 	public Object getValue(){

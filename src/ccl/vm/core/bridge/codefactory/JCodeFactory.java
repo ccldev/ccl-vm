@@ -65,7 +65,7 @@ public class JCodeFactory {
 			
 			b.append("_method_container_.getProperty(\"");
 			b.append(m.getName());
-			b.append("\")).invoke(");
+			b.append("\"),null).invoke(");
 			b.append(createInvokeParamString(m.getParameters()));
 			b.append(");");
 			

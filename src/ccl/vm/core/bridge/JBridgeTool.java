@@ -73,7 +73,12 @@ public class JBridgeTool {
 	
 	public static int putToArray(Object[] array, int index, Class<?> type, Object param){
 		if (type.isPrimitive()) {
-			Class<?> paramType = param.getClass();
+			Class<?> paramType = null;
+			if(param != null){
+				paramType = param.getClass();
+			}else{
+				paramType = Object.class;
+			}
 			try {
 				array[index] = paramType
 						.getMethod(type.getName() + "Value").invoke(
@@ -123,7 +128,7 @@ public class JBridgeTool {
 			IExpression<? extends Object> expression) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Class<?> clss = JInterfaceBuilder.makeNormalClass(iface);
 		Constructor<?> constructor = clss.getConstructor(InvocationHandler.class);
-		return new Expression<Object>(constructor.newInstance(new JInvocationHandler(expression)));
+		return new Expression<Object>(constructor.newInstance(new JInvocationHandler(iface, expression)));
 	}
 
 }
