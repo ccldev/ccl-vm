@@ -5,12 +5,12 @@ import java.util.List;
 
 public class Array {
 
-	public List<Expression<?>> list;
+	public List<Expression> list;
 	
 	public Array(int length) {
 		list = new ArrayList<>();
 		for(int i = 0; i < length; i++){
-			list.add(new Expression<>(new Undefined()));
+			list.add(new Expression(new Undefined()));
 		}
 	}
 
@@ -18,7 +18,7 @@ public class Array {
 		return list.size();
 	}
 	
-	public Expression<?> getExpression(int index) {
+	public Expression getExpression(int index) {
 		return list.get(index);
 	}
 	
@@ -26,12 +26,12 @@ public class Array {
 		return getExpression(index).getValue();
 	}
 	
-	public void pushExpression(Expression<?> expr){
+	public void pushExpression(Expression expr){
 		list.add(expr);
 	}
 	
 	public void set(int index, Object value){
-		list.set(index, new Expression<>(value));
+		list.set(index, new Expression(value));
 	}
 	
 	public String toString(){

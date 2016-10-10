@@ -4,21 +4,20 @@ import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.core.Expression;
-import ccl.vm.core.expr.FunctionExpression;
+import ccl.vm.expr.FunctionExpression;
 
-public class WhileFunction implements IFunction<Object, Object> {
+public class WhileFunction implements IFunction {
 
-	private IFunction<Object, Object> expression;
+	private IFunction expression;
 
-	public WhileFunction(IFunction<Object, Object> expression) {
+	public WhileFunction(IFunction expression) {
 		this.expression = expression;
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	@Override
-	public IExpression<? extends Object> invoke(
-			IExpression<? extends Object>... parameters) throws CclException {
-		return new FunctionExpression(new WhileFunctionImpl(expression, (Expression<? extends Object>) parameters[0]));
+	public IExpression invoke(
+			IExpression... parameters) throws CclException {
+		return new FunctionExpression(new WhileFunctionImpl(expression, (Expression) parameters[0]));
 	}
 
 }

@@ -1,13 +1,12 @@
 package ccl.vm.core;
 
 import ccl.iface.IFunction;
-import ccl.vm.core.expr.FunctionExpression;
+import ccl.vm.expr.FunctionExpression;
 
-public class FunctionMarker<P, R> extends FunctionExpression{
-
-	@SuppressWarnings("unchecked")
-	public FunctionMarker(IFunction<P, R> func) {
-		super((IFunction<Object, Object>) func);
+public class FunctionMarker extends FunctionExpression{
+	
+	public FunctionMarker(IFunction func) {
+		super((IFunction) func);
 	}
 	
 	public String toString(){

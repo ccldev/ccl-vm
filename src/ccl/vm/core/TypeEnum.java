@@ -10,15 +10,14 @@ public enum TypeEnum {
 	ARRAY(a()), EXPRESSION(e()),
 	BOOLEAN(b()), NATIVE(n()), METHOD(m());
 	
-	private IType<?> type;
+	private IType type;
 
-	private TypeEnum(IType<?> t){
+	private TypeEnum(IType t){
 		this.type = t;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public <T> IType<T> get(){
-		return (IType<T>) type;
+	public IType get(){
+		return type;
 	}
 	
 }
