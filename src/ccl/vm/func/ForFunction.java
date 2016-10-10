@@ -5,7 +5,6 @@ import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.core.Array;
 import ccl.vm.core.Expression;
-import ccl.vm.expr.FloatExpression;
 
 public class ForFunction implements IFunction {
 
@@ -23,7 +22,7 @@ public class ForFunction implements IFunction {
 			double start = (Double) parameters[0].getValue();
 			double to = (Double) parameters[1].getValue();
 			for(double i = start; i <= to; i++){
-				a.pushExpression((Expression) expression.invoke(new FloatExpression(i)));
+				a.pushExpression((Expression) expression.invoke(new Expression(i)));
 			}
 			return new Expression(a);
 		}

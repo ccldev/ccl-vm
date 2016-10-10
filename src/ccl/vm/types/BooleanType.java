@@ -1,7 +1,7 @@
 package ccl.vm.types;
 
 import ccl.iface.IExpression;
-import ccl.vm.expr.BooleanExpression;
+import ccl.vm.core.Expression;
 
 public class BooleanType extends ExpressionType{
 
@@ -14,7 +14,7 @@ public class BooleanType extends ExpressionType{
 
 	@Override
 	public IExpression expr(Object o) {
-		return new BooleanExpression((boolean) o);
+		return new Expression((boolean) o);
 	}
 	
 }

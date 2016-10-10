@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import ccl.iface.CclException;
 import ccl.vm.core.Expression;
-import ccl.vm.expr.ErrorExpression;
 
 public class Property {
 	
@@ -29,7 +28,7 @@ public class Property {
 		try {
 			return new JProperty(name, o, filter.toArray(new Method[0]), f);
 		} catch (CclException e) {
-			return new ErrorExpression(e);
+			return Expression.err(e);
 		}
 	}
 	

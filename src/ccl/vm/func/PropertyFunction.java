@@ -5,17 +5,17 @@ import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.core.Expression;
 
-public class LinkFunction implements IFunction{
+public class PropertyFunction implements IFunction{
 
-	private IFunction expression;
+	private Expression expr;
 
-	public LinkFunction(IFunction expression) {
-		this.expression = expression;
+	public PropertyFunction(Expression expr) {
+		this.expr = expr;
 	}
 
 	@Override
 	public IExpression invoke(IExpression... parameters) throws CclException {
-		return new Expression(new LinkedFunction(expression, parameters));
+		return expr.getProperty(parameters[0].getValue().toString());
 	}
 
 }

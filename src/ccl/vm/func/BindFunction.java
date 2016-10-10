@@ -4,7 +4,7 @@ import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.Tools;
-import ccl.vm.expr.FunctionExpression;
+import ccl.vm.core.Expression;
 
 public class BindFunction implements IFunction{
 
@@ -17,7 +17,7 @@ public class BindFunction implements IFunction{
 	@Override
 	public IExpression invoke(
 			final IExpression... pa) throws CclException {
-		return new FunctionExpression(new IFunction() {
+		return new Expression(new IFunction() {
 			@Override
 			public IExpression invoke(IExpression... pb)
 					throws CclException {

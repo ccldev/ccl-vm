@@ -14,7 +14,6 @@ import ccl.iface.exec.IExecuter;
 import ccl.iface.exec.IExecuterFactory;
 import ccl.vm.core.Expression;
 import ccl.vm.core.Undefined;
-import ccl.vm.expr.ErrorExpression;
 
 public class FunctionImpl implements IFunction {
 
@@ -41,7 +40,7 @@ public class FunctionImpl implements IFunction {
 		try {
 			s = url.openStream();
 		} catch (IOException e) {
-			return new ErrorExpression(e);
+			return Expression.err(e);
 		}
 		try {
 			IExecuter exec = factory.create();

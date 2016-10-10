@@ -1,7 +1,7 @@
 package ccl.vm.types;
 
 import ccl.iface.IExpression;
-import ccl.vm.expr.FloatExpression;
+import ccl.vm.core.Expression;
 
 public class FloatType extends ExpressionType{
 
@@ -15,7 +15,7 @@ public class FloatType extends ExpressionType{
 
 	@Override
 	public IExpression expr(Object o) {
-		return new FloatExpression((double) o);
+		return new Expression((double) o);
 	}
 
 }

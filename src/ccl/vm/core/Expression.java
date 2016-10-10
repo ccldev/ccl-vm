@@ -10,17 +10,13 @@ import ccl.iface.IFunction;
 import ccl.vm.bridge.JClassExpression;
 import ccl.vm.bridge.JProperty;
 import ccl.vm.bridge.Property;
-import ccl.vm.expr.BooleanExpression;
-import ccl.vm.expr.ErrorExpression;
-import ccl.vm.expr.FloatExpression;
-import ccl.vm.expr.FunctionExpression;
-import ccl.vm.expr.IntegerExpression;
-import ccl.vm.expr.StringExpression;
 import ccl.vm.func.AddParamFunction;
 import ccl.vm.func.ArrayFunction;
 import ccl.vm.func.BindFunction;
 import ccl.vm.func.ForFunction;
+import ccl.vm.func.FunctionImpl;
 import ccl.vm.func.LinkFunction;
+import ccl.vm.func.PropertyFunction;
 import ccl.vm.func.WhileFunction;
 import ccl.vm.storage.VariableInfo;
 
@@ -30,6 +26,14 @@ public class Expression implements IExpression {
 	private HashMap<String, Expression> properties;
 	private List<String> propList = new ArrayList<String>();
 
+	private boolean error;
+	
+	public static Expression err(Object err){
+		Expression e = new Expression(err);
+		e.error = true;
+		return e;
+	}
+	
 	public Expression(Object value) {
 		this.value = value;
 		this.properties = new HashMap<>();
@@ -41,6 +45,10 @@ public class Expression implements IExpression {
 		init();
 	}
 
+	public boolean isError(){
+		return error;
+	}
+	
 	private void init() {
 		propList.add("array");
 		propList.add("while");
@@ -67,7 +75,13 @@ public class Expression implements IExpression {
 	}
 
 	public String toString() {
-		return "E:\"" + value + "\"";
+		if(value instanceof IFunction){
+			if(value instanceof FunctionImpl){
+				return "<function>";
+			}
+			return "<native function>";
+		}
+		return "<expr: " + value + ">";
 	}
 
 	public VariableInfo asVariable() {
@@ -91,24 +105,26 @@ public class Expression implements IExpression {
 		Expression res = null;
 		switch (name) {
 		case "array":
-			return new FunctionExpression(new ArrayFunction(this));
+			return new Expression(new ArrayFunction(this));
 		case "while":
-			return new FunctionExpression(new WhileFunction(this));
+			return new Expression(new WhileFunction(this));
 		case "for":
-			return new FunctionExpression(new ForFunction(this));
+			return new Expression(new ForFunction(this));
 		case "unbind":
-			return new FunctionExpression(new AddParamFunction(this));
+			return new Expression(new AddParamFunction(this));
 		case "link":
-			return new FunctionExpression(new LinkFunction(this));
+			return new Expression(new LinkFunction(this));
 		case "bind":
-			return new FunctionExpression(new BindFunction(this));
+			return new Expression(new BindFunction(this));
+		case "property":
+			return new Expression(new PropertyFunction(this));
 		}
 		res = getProperty0(name);
 		if (res != null) {
 			setProperty(name, res);
 			return res;
 		}
-		return new ErrorExpression(new CclException("No such property found!"));
+		return err(new CclException("No such property found!"));
 	}
 
 	private Expression getProperty0(String name) {
@@ -133,36 +149,33 @@ public class Expression implements IExpression {
 
 	public String computeUseType() {
 		Class<?> c = getClass();
-		if (c == Expression.class) {
-			if (getValue() instanceof ErrorMarker)
-				return "error";
-			return "base";
-		}
 
+		if (error)
+			return "error";
+		
 		if (value instanceof Array)
 			return "array";
-
-		if (c == IntegerExpression.class)
-			return "integer";
-		if (c == FloatExpression.class)
-			return "float";
-		if (c == BooleanExpression.class)
+		if (value instanceof Boolean)
 			return "boolean";
-		if (c == StringExpression.class)
+		if (value instanceof Number)
+			return "number";
+		if (value instanceof String)
 			return "string";
-		if (c == FunctionExpression.class)
+		if (value instanceof IFunction)
 			return "function";
+		
 		if (c == JProperty.class)
 			return "native";
 		if (c == JClassExpression.class)
 			return "native";
-		if (c == ErrorExpression.class)
-			return "error";
 		return "unknown";
 	}
 
 	@Override
 	public IExpression invoke(IExpression... parameters) throws CclException {
+		if (value instanceof IFunction){
+			return ((IFunction) value).invoke(parameters);
+		}
 		if (parameters.length == 0)
 			return this;
 		else if (parameters.length == 1) {

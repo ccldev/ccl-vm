@@ -8,7 +8,6 @@ import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.core.Array;
 import ccl.vm.core.Expression;
-import ccl.vm.expr.StringExpression;
 
 public class JInvocationHandler implements InvocationHandler{
 
@@ -30,7 +29,7 @@ public class JInvocationHandler implements InvocationHandler{
 	private IExpression wrapToArray(String name,
 			IExpression func) throws CclException {
 		Expression expr = new Expression(new Array(0));
-		expr.getProperty("push").invoke(func, new StringExpression(name));
+		expr.getProperty("push").invoke(func, new Expression(name));
 		return expr;
 	}
 	

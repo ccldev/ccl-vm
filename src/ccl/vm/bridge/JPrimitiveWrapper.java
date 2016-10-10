@@ -3,10 +3,6 @@ package ccl.vm.bridge;
 import ccl.vm.core.Array;
 import ccl.vm.core.Expression;
 import ccl.vm.core.Undefined;
-import ccl.vm.expr.BooleanExpression;
-import ccl.vm.expr.FloatExpression;
-import ccl.vm.expr.IntegerExpression;
-import ccl.vm.expr.StringExpression;
 
 public class JPrimitiveWrapper {
 
@@ -31,14 +27,14 @@ public class JPrimitiveWrapper {
 		case "java.lang.Long":
 		case "java.lang.Short":
 		case "java.lang.Byte":
-			return new IntegerExpression(((Number) val).longValue());
+			return new Expression(((Number) val).longValue());
 		case "java.lang.Double":
 		case "java.lang.Float":
-			return new FloatExpression(((Number) val).doubleValue());
+			return new Expression(((Number) val).doubleValue());
 		case "java.lang.Boolean":
-			return new BooleanExpression((Boolean) val);
+			return new Expression(val);
 		case "java.lang.Character":
-			return new StringExpression(val + "");		
+			return new Expression(val + "");		
 		default: throw new RuntimeException("Unexpected type: " + val.getClass());
 		}
 	}

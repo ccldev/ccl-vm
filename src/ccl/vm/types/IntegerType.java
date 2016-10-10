@@ -1,7 +1,7 @@
 package ccl.vm.types;
 
 import ccl.iface.IExpression;
-import ccl.vm.expr.IntegerExpression;
+import ccl.vm.core.Expression;
 
 public class IntegerType extends ExpressionType{
 
@@ -15,7 +15,7 @@ public class IntegerType extends ExpressionType{
 
 	@Override
 	public IExpression expr(Object o) {
-		return new IntegerExpression((long) o);
+		return new Expression((long) o);
 	}
 
 }

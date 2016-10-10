@@ -1,7 +1,7 @@
 package ccl.vm.types;
 
 import ccl.iface.IExpression;
-import ccl.vm.expr.StringExpression;
+import ccl.vm.core.Expression;
 
 public class StringType extends ExpressionType{
 
@@ -14,7 +14,7 @@ public class StringType extends ExpressionType{
 
 	@Override
 	public IExpression expr(Object o) {
-		return new StringExpression(String.valueOf(o));
+		return new Expression(String.valueOf(o));
 	}
 
 }

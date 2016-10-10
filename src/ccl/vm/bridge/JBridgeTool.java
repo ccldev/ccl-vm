@@ -9,7 +9,6 @@ import java.util.List;
 
 import ccl.iface.IExpression;
 import ccl.vm.core.Expression;
-import ccl.vm.expr.ErrorExpression;
 
 public class JBridgeTool {
 
@@ -39,7 +38,7 @@ public class JBridgeTool {
 				continue mainloop;
 			}
 		}
-		return new ErrorExpression(errors);
+		return Expression.err(errors);
 	}
 	public static IExpression invoke(Constructor<?>[] methods, IExpression[] parameters) {
 		List<Throwable> errors = new ArrayList<Throwable>();
@@ -64,7 +63,7 @@ public class JBridgeTool {
 				continue mainloop;
 			}
 		}
-		return new ErrorExpression(errors);
+		return Expression.err(errors);
 	}
 	
 	private static IExpression invokeSingle(Constructor<?> m, Object[] parameters) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {

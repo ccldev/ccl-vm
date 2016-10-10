@@ -8,7 +8,6 @@ import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.core.Expression;
 import ccl.vm.core.Undefined;
-import ccl.vm.expr.FunctionExpression;
 
 public class JProperty extends Expression {
 
@@ -23,7 +22,7 @@ public class JProperty extends Expression {
 		this.object = o;
 		this.value = getValue();
 		
-		setProperty("_set_", new FunctionExpression(new IFunction(){
+		setProperty("_set_", new Expression(new IFunction(){
 
 			@Override
 			public IExpression invoke(

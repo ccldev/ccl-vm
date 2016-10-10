@@ -16,7 +16,6 @@ import ccl.vm.err.FullVariableStorageException;
 import ccl.vm.err.TypeCheckException;
 import ccl.vm.err.VariableDuplicationException;
 import ccl.vm.err.VariableInitException;
-import ccl.vm.expr.BooleanExpression;
 import ccl.vm.storage.Storage;
 import ccl.vm.types.FunctionType;
 
@@ -78,20 +77,6 @@ public class VMActions implements IVMActions{
 		put(s);
 		parse(TypeEnum.STRING.get());
 	}
-	public void putI(String s) throws CclException {
-		put(s);
-		parse(TypeEnum.INTEGER.get());
-	}
-	public void putF(String s) throws CclException {
-		put(s);
-		parse(TypeEnum.FLOAT.get());
-	}
-	public void putB1() {
-		storage.push(new BooleanExpression(true));
-	}
-	public void putB0() {
-		storage.push(new BooleanExpression(false));
-	}
 	public void swap() {
 		IExpression a = pop();
 		IExpression b = pop();
@@ -110,7 +95,14 @@ public class VMActions implements IVMActions{
 			array[i] = (IExpression) pop();
 		}
 		storage.openScope();
-		IExpression ret = func.invoke((IExpression[]) array);
+		IExpression ret; 
+		
+		try{
+			ret = func.invoke((IExpression[]) array);
+		}catch(RuntimeException e){
+			ret = Expression.err(e);
+		}
+		
 		storage.closeScope();
 		storage.push(ret);
 	}

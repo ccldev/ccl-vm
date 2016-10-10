@@ -4,7 +4,6 @@ import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.core.Expression;
-import ccl.vm.expr.ErrorExpression;
 
 public class CharParser implements IFunction{
 
@@ -20,12 +19,12 @@ public class CharParser implements IFunction{
 			if(s.length() == 1){
 				return new Expression(s.charAt(0));
 			}
-			return new ErrorExpression("Unable to parse char. Length != 1\nInput: " + s);
+			return Expression.err("Unable to parse char. Length != 1\nInput: " + s);
 		}
 		if(param instanceof Character){
 			return new Expression(param);
 		}
-		return new ErrorExpression("Unable to parse char. Unknown object type!\nInput: " + param);
+		return Expression.err("Unable to parse char. Unknown object type!\nInput: " + param);
 	}
 
 }
