@@ -6,6 +6,8 @@ import ccl.iface.IFunction;
 import ccl.vm.func.ArrayGetFunction;
 import ccl.vm.func.PushFunction;
 
+import static ccl.vm.Tools.raw;
+
 public class ExpressionInit {
 
 	public static void initBoolean(Expression e) {
@@ -109,10 +111,6 @@ public class ExpressionInit {
 	public static void initString(Expression e) {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	private static double raw(Object value) {
-		return Double.parseDouble(String.valueOf(value));
 	}
 
 }

@@ -15,5 +15,9 @@ public class Tools {
 		}
 		return list.toArray(arrays[0]);
 	}
+
+	public static double raw(Object value) {
+		return Double.parseDouble(String.valueOf(value));
+	}
 	
 }

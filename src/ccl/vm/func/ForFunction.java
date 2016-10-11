@@ -19,8 +19,8 @@ public class ForFunction implements IFunction {
 			IExpression... parameters) throws CclException {
 		if(parameters.length == 2){
 			Array a = new Array(0);
-			double start = (Double) parameters[0].getValue();
-			double to = (Double) parameters[1].getValue();
+			double start = ((Number) parameters[0].getValue()).doubleValue();
+			double to = ((Number) parameters[1].getValue()).doubleValue();
 			for(double i = start; i <= to; i++){
 				a.pushExpression((Expression) expression.invoke(new Expression(i)));
 			}

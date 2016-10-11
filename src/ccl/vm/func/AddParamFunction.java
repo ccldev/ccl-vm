@@ -5,6 +5,8 @@ import ccl.iface.IExpression;
 import ccl.iface.IFunction;
 import ccl.vm.core.Expression;
 
+import static ccl.vm.Tools.raw;
+
 public class AddParamFunction implements IFunction{
 
 	private IFunction expression;
@@ -16,7 +18,7 @@ public class AddParamFunction implements IFunction{
 	@Override
 	public IExpression invoke(
 			IExpression... parameters) throws CclException {
-		return new Expression(new CuttedFunction((Double) parameters[0].getValue(), expression));
+		return new Expression(new CuttedFunction(raw(parameters[0].getValue()), expression));
 	}
 
 }
