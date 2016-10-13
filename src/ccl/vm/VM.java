@@ -1,8 +1,10 @@
 package ccl.vm;
 
 import ccl.iface.CclException;
+import ccl.iface.IExpression;
+import ccl.iface.IFunction;
 import ccl.vm.core.Expression;
-import ccl.vm.core.TypeEnum;
+import ccl.vm.core.Parse;
 import ccl.vm.core.Undefined;
 import ccl.vm.std.CharParser;
 import ccl.vm.std.FloatParser;
@@ -27,13 +29,24 @@ public class VM {
 		vm.reserve(BOOL_TRUE);
 		vm.load(BOOL_TRUE);
 		vm.put(BOOL_TRUE);
-		vm.parse(TypeEnum.BOOLEAN.get());
+		vm.parse('B');
 		vm.store();
 		
 		vm.reserve(BOOL_FALSE);
 		vm.load(BOOL_FALSE);
 		vm.put(BOOL_FALSE);
-		vm.parse(TypeEnum.BOOLEAN.get());
+		vm.parse('B');
+		vm.store();
+		
+		vm.reserve("boolean");
+		vm.load("boolean");
+		vm.storage.push(new Expression(new IFunction(){
+			@Override
+			public IExpression invoke(IExpression... parameters)
+					throws CclException {
+				return new Expression(Parse.parseBoolean(parameters[0].getValue()));
+			}
+		}));
 		vm.store();
 		
 		//num
@@ -51,6 +64,18 @@ public class VM {
 		vm.reserve(PARSE_CHAR);
 		vm.load(PARSE_CHAR);
 		vm.storage.push(new Expression(new CharParser()));
+		vm.store();
+		
+		//err
+		vm.reserve("error");
+		vm.load("error");
+		vm.storage.push(new Expression(new IFunction(){
+			@Override
+			public IExpression invoke(IExpression... parameters)
+					throws CclException {
+				return Expression.err(parameters[0].getValue());
+			}
+		}));
 		vm.store();
 	}
 

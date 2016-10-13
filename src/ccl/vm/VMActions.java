@@ -6,18 +6,18 @@ import java.util.ArrayList;
 import ccl.iface.CclException;
 import ccl.iface.IExpression;
 import ccl.iface.IFunction;
-import ccl.iface.IType;
 import ccl.iface.IVMActions;
 import ccl.iface.exec.IExecuterFactory;
+import ccl.vm.bridge.JClass;
+import ccl.vm.bridge.JClassExpression;
 import ccl.vm.core.Expression;
-import ccl.vm.core.TypeEnum;
+import ccl.vm.core.Parse;
 import ccl.vm.err.FullTempStorageException;
 import ccl.vm.err.FullVariableStorageException;
 import ccl.vm.err.TypeCheckException;
 import ccl.vm.err.VariableDuplicationException;
 import ccl.vm.err.VariableInitException;
 import ccl.vm.storage.Storage;
-import ccl.vm.types.FunctionType;
 
 public class VMActions implements IVMActions{
 	
@@ -56,9 +56,25 @@ public class VMActions implements IVMActions{
 	public void put(String val){
 		storage.push(new Expression(val));
 	}
-	public void parse(IType t) throws CclException {
+	public void parse(char t) throws CclException {
 		Object o = pop().getValue();
-		storage.push(t.expr(t.parse(o)));
+		switch(t){
+		case 'B': o = Parse.parseBoolean(o); break;
+		case 'A': o = Parse.parseArray(o); break;
+		case 'F': o = Parse.parseDouble(o); break;
+		case 'M': o = Parse.parseFunction(o); break;
+		case 'S': o = Parse.parseString(o); break;
+		case 'I': o = Parse.parseInteger(o); break;
+		case 'N': o = Parse.parseNative(o); break;
+		default: throw new RuntimeException("Unexpected type char: " + t);
+		}
+		if(o instanceof Exception){
+			storage.push(Expression.err(o));
+		}else if(o instanceof JClass){
+			storage.push(new JClassExpression((JClass) o));
+		}else{
+			storage.push(new Expression(o));
+		}
 	}
 	public void store() throws TypeCheckException {
 		IExpression val = pop();
@@ -69,10 +85,6 @@ public class VMActions implements IVMActions{
 		IExpression e = storage.peek().asVariable().getValue();
 		pop();
 		storage.push(e);
-	}
-	public void putS(String s) throws CclException {
-		put(s);
-		parse(TypeEnum.STRING.get());
 	}
 	public void swap() {
 		IExpression a = pop();
@@ -106,7 +118,7 @@ public class VMActions implements IVMActions{
 
 	@Override
 	public void setExecuterFactory(IExecuterFactory factory) {
-		FunctionType.factory = factory;
+		Parse.factory = factory;
 	}
 	
 	@Override
